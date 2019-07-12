@@ -1,0 +1,8 @@
+.DS_store
+.jshintignore
+.npm
+.project
+.sessions.json
+.settings
+*.backup
+node_modules
