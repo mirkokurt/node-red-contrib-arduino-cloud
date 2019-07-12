@@ -9,7 +9,7 @@ module.exports = function(RED) {
           const timestamp = (new Date()).getTime();
           node.send(
             {
-              topic: config.property,
+              topic: p.name,
               payload: message,
               timestamp: timestamp
             }            
