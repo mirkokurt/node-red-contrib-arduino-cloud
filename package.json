@@ -5,11 +5,19 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [ "node-red", "Arduino", "IoT", "Cloud" ],
+  "keywords": [
+    "node-red",
+    "Arduino",
+    "IoT",
+    "Cloud"
+  ],
   "license": "MIT",
-  "node-red" : {
+  "node-red": {
     "nodes": {
-        "Property-in": "arduino-cloud.js"
+      "Property-in": "arduino-cloud.js"
     }
+  },
+  "dependencies": {
+    "moment": "^2.24.0"
   }
 }
