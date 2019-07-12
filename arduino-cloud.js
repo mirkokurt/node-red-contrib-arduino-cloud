@@ -4,7 +4,8 @@ module.exports = function(RED) {
       var node = this;
       const ArdarduinCloudMessageClient = RED.settings.functionGlobalContext.arduinoConnectionManager.apiMessage;
       if (ArdarduinCloudMessageClient) {
-        ArdarduinCloudMessageClient.onPropertyValue(config.thing, config.property.name, message => {
+        const p = JSON.parse(config.property);
+        ArdarduinCloudMessageClient.onPropertyValue(config.thing, p.name, message => {
           const timestamp = (new Date()).getTime();
           node.send(
             {
@@ -15,7 +16,7 @@ module.exports = function(RED) {
           );
         }).then(() => {
           node.on('close', function(done) {
-            ArdarduinCloudMessageClient.removePropertyValueCallback(config.thing, config.property.name).then( () => {
+            ArdarduinCloudMessageClient.removePropertyValueCallback(config.thing, p.name).then( () => {
               done();
             });
           });
@@ -29,9 +30,10 @@ module.exports = function(RED) {
       var node = this;
       const ArdarduinCloudMessageClient = RED.settings.functionGlobalContext.arduinoConnectionManager.apiMessage;
       if (ArdarduinCloudMessageClient) {
+        const p = JSON.parse(config.property);
         node.on('input', function(msg) {
           const timestamp =   (new Date()).getTime();
-          ArdarduinCloudMessageClient.sendProperty(config.thing, config.property.name, msg.payload, timestamp).then(() => {
+          ArdarduinCloudMessageClient.sendProperty(config.thing, p.name, msg.payload, timestamp).then(() => {
           });
       });
       }
