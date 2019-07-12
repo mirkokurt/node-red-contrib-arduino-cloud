@@ -22,6 +22,21 @@ module.exports = function(RED) {
         });
       }
   }
+  RED.nodes.registerType("Property-in", ArduinoIotInput);
+
+  function ArduinoIotOutput(config) {
+      RED.nodes.createNode(this, config);
+      var node = this;
+      const ArdarduinCloudMessageClient = RED.settings.functionGlobalContext.arduinoConnectionManager.apiMessage;
+      if (ArdarduinCloudMessageClient) {
+        node.on('input', function(msg) {
+          const timestamp =   (new Date()).getTime();
+          ArdarduinCloudMessageClient.sendProperty(config.thing, config.property, msg.payload, timestamp).then(() => {
+          });
+      });
+      }
+  }
+  RED.nodes.registerType("Property-out", ArduinoIotOutput);
 
   RED.httpAdmin.get("/things", RED.auth.needsPermission('Property-in.read'), function(req,res) {
     const ArduinoRestClient = RED.settings.functionGlobalContext.arduinoConnectionManager.apiRest;
@@ -45,5 +60,4 @@ module.exports = function(RED) {
     });
   });
 
-  RED.nodes.registerType("Property-in", ArduinoIotInput);
 }
