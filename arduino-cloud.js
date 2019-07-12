@@ -22,7 +22,7 @@ module.exports = function(RED) {
         });
       }
   }
-  RED.nodes.registerType("Property-in", ArduinoIotInput);
+  RED.nodes.registerType("property in", ArduinoIotInput);
 
   function ArduinoIotOutput(config) {
       RED.nodes.createNode(this, config);
@@ -36,7 +36,7 @@ module.exports = function(RED) {
       });
       }
   }
-  RED.nodes.registerType("Property-out", ArduinoIotOutput);
+  RED.nodes.registerType("property out", ArduinoIotOutput);
 
   RED.httpAdmin.get("/things", RED.auth.needsPermission('Property-in.read'), function(req,res) {
     const ArduinoRestClient = RED.settings.functionGlobalContext.arduinoConnectionManager.apiRest;
