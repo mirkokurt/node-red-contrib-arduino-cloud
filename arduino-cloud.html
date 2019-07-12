@@ -25,14 +25,14 @@
           }
           if (this.thing) {
             console.log("thing_id: " + this.thing);
-            initiProperties(this.thing, this.property);
+            initProperties(this.thing, this.property);
             $("#node-input-thing").val(this.thing);
           }
         });
         $("#node-input-thing").change( () => {
           const thing_id = $( "#node-input-thing" ).val();
           if (thing_id && thing_id !== "0") {
-            initiProperties(thing_id);
+            initProperties(thing_id);
           }
         });
         $("#node-input-property").change( () => {
@@ -104,14 +104,14 @@
           }
           if (this.thing) {
             console.log("thing_id: " + this.thing);
-            initiProperties(this.thing, this.property);
+            initProperties(this.thing, this.property);
             $("#node-input-thing").val(this.thing);
           }
         });
         $("#node-input-thing").change( () => {
           const thing_id = $( "#node-input-thing" ).val();
           if (thing_id && thing_id !== "0") {
-            initiProperties(thing_id);
+            initProperties(thing_id);
           }
         });
         $("#node-input-property").change( () => {
@@ -181,14 +181,14 @@
           }
           if (this.thing) {
             console.log("thing_id: " + this.thing);
-            initiProperties(this.thing, this.property);
+            initProperties(this.thing, this.property);
             $("#node-input-thing").val(this.thing);
           }
         });
         $("#node-input-thing").change( () => {
           const thing_id = $( "#node-input-thing" ).val();
           if (thing_id && thing_id !== "0") {
-            initiProperties(thing_id);
+            initProperties(thing_id);
           }
         });
         $("#node-input-property").change( () => {
@@ -217,9 +217,9 @@
         console.log("property_id: " + this.property);
       }
   });
-  function initiProperties(thing_id, property) {
+  function initProperties(thing_id, property) {
     $("#node-input-property").html("");
-    $.getJSON(`/red/properties?thing_id=${thing_id}` , properties => {
+    $.getJSON(`properties?thing_id=${thing_id}` , properties => {
       $("<option value='" + 0 + "'> " + "Select a property" + "</option>").appendTo("#node-input-property");
       for (const p of properties) {
         console.log(p);
