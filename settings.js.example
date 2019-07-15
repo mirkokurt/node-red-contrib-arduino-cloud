@@ -181,7 +181,11 @@ module.exports = {
        users: [{
             username: "ilcato",
             permissions: ["*"]
-        }]
+        },
+        {
+            username: "fabik111",
+            permissions: ["*"]
+        },]
     }, 
     // To password protect the node-defined HTTP endpoints (httpNodeRoot), or
     // the static content (httpStatic), the following properties can be used.
@@ -268,7 +272,17 @@ module.exports = {
     // can be accessed in a function block as:
     //    global.get("os")
     functionGlobalContext: {
-        arduinoConnectionManager: require('connection-manager-arduino-cloud')
+        arduinoConnectionManager: (async () => {
+            try {
+                const connectionManager = require('connection-manager-arduino-cloud');
+                const initToken = await connectionManager.load();
+                await connectionManager.init(initToken.accessToken, initToken.refreshToken, initToken.tokenURL, initToken.clientID, initToken.clientSecret);
+                return connectionManager;
+            } catch (err) {
+                console.log(err);
+                return {};
+            }
+        })()
         // os:require('os'),
         // jfive:require("johnny-five"),
         // j5board:require("johnny-five").Board({repl:false})
