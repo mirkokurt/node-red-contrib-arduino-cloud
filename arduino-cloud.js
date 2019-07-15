@@ -4,8 +4,7 @@ module.exports = function(RED) {
       var node = this;
       const ArdarduinCloudMessageClient = RED.settings.functionGlobalContext.arduinoConnectionManager.apiMessage;
       if (ArdarduinCloudMessageClient) {
-        const p = JSON.parse(config.property);
-        ArdarduinCloudMessageClient.onPropertyValue(config.thing, p.name, message => {
+        ArdarduinCloudMessageClient.onPropertyValue(config.thing, config.name, message => {
           const timestamp = (new Date()).getTime();
           node.send(
             {
@@ -16,7 +15,7 @@ module.exports = function(RED) {
           );
         }).then(() => {
           node.on('close', function(done) {
-            ArdarduinCloudMessageClient.removePropertyValueCallback(config.thing, p.name).then( () => {
+            ArdarduinCloudMessageClient.removePropertyValueCallback(config.thing, config.name).then( () => {
               done();
             });
           });
@@ -30,10 +29,9 @@ module.exports = function(RED) {
       var node = this;
       const ArdarduinCloudMessageClient = RED.settings.functionGlobalContext.arduinoConnectionManager.apiMessage;
       if (ArdarduinCloudMessageClient) {
-        const p = JSON.parse(config.property);
         node.on('input', function(msg) {
           const timestamp =   (new Date()).getTime();
-          ArdarduinCloudMessageClient.sendProperty(config.thing, p.name, msg.payload, timestamp).then(() => {
+          ArdarduinCloudMessageClient.sendProperty(config.thing, config.name, msg.payload, timestamp).then(() => {
           });
       });
       }
@@ -54,9 +52,7 @@ module.exports = function(RED) {
       const ArduinoCloudRESTClient = RED.settings.functionGlobalContext.ArduinoRestClient;
       if (ArduinoCloudRESTClient) {
         node.on('input', function() {
-          //console.log("api activated");
           ArduinoCloudRESTClient.getProperty(config.thing, config.propid).then( (result) => {
-            //console.log("result: " + JSON.stringify(result));
             const timestamp = (new Date()).getTime();
             let payload = result.last_value;
             if (payload === "true") {
@@ -80,7 +76,6 @@ module.exports = function(RED) {
       const ArduinoCloudRESTClient = RED.settings.functionGlobalContext.ArduinoRestClient;
       if (ArduinoCloudRESTClient) {
         node.on('input', function() {
-          //console.log("api activated");
           const now = moment();
           const end = now.format();
           const start = now.subtract(this.timeWindowCount * this.timeWindowUnit, 'second').format();

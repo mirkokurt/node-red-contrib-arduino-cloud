@@ -21,7 +21,7 @@
         $.getJSON('things' , things => {
           $("<option value='" + 0 + "'> " + "Select a thing" + "</option>").appendTo("#node-input-thing");
           for (const t of things) {
-            $("<option value='" + t.id + "'> " + t.name + "</option>").appendTo("#node-input-thing");
+            $("<option value='" + t.id + "'>" + t.name + "</option>").appendTo("#node-input-thing");
           }
           if (this.thing) {
             console.log("thing_id: " + this.thing);
@@ -36,16 +36,9 @@
           }
         });
         $("#node-input-property").change( () => {
-         const property = JSON.parse($("#node-input-property").val());
-          if (property && property !== "") {
-            const property_name = property.name;
-            const property_id = property.id;
-            if (property_name && property_name !== "") {
-              $( "#node-input-name" ).val(property_name);
-            }
-            if (property_id && property_id !== "") {
-              $( "#node-input-propid" ).val(property_id);
-            }
+          const property_name = $("#node-input-property").find('option:selected').text();
+          if (property_name && property_name !== "") {
+            $( "#node-input-name" ).val(property_name);
           }
         });
       },
@@ -115,7 +108,7 @@
           }
         });
         $("#node-input-property").change( () => {
-          const property_name = $("#node-input-property").val();
+          const property_name = $("#node-input-property").find('option:selected').text();
           if (property_name && property_name !== "") {
             $( "#node-input-name" ).val(property_name);
           }
@@ -174,10 +167,10 @@
         console.log("thing_id: " + this.thing);
         console.log("property_id: " + this.property);
         $( "#node-input-name" ).val(this.name);
-        $.getJSON('/red/things' , things => {
+        $.getJSON('things' , things => {
           $("<option value='" + 0 + "'> " + "Select a thing" + "</option>").appendTo("#node-input-thing");
           for (const t of things) {
-            $("<option value='" + t.id + "'> " + t.name + "</option>").appendTo("#node-input-thing");
+            $("<option value='" + t.id + "'>" + t.name + "</option>").appendTo("#node-input-thing");
           }
           if (this.thing) {
             console.log("thing_id: " + this.thing);
@@ -192,16 +185,13 @@
           }
         });
         $("#node-input-property").change( () => {
-          const property = JSON.parse($("#node-input-property").val());
-          if (property && property !== "") {
-            const property_name = property.name;
-            const property_id = property.id;
-            if (property_name && property_name !== "") {
-              $( "#node-input-name" ).val(property_name);
-            }
-            if (property_id && property_id !== "") {
-              $( "#node-input-propid" ).val(property_id);
-            }
+          const property_id = $("#node-input-property").val();
+          if (property_id && property_id !== "") {
+            $( "#node-input-propid" ).val(property_id);
+          }
+          const property_name = $("#node-input-property").find('option:selected').text();
+          if (property_name && property_name !== "") {
+            $( "#node-input-name" ).val(property_name);
           }
         });
         $("#node-input-last").change(function() {
@@ -217,20 +207,16 @@
         console.log("property_id: " + this.property);
       }
   });
-  function initProperties(thing_id, property) {
+  function initProperties(thing_id, property_id) {
+    console.log("init properties");
     $("#node-input-property").html("");
     $.getJSON(`properties?thing_id=${thing_id}` , properties => {
       $("<option value='" + 0 + "'> " + "Select a property" + "</option>").appendTo("#node-input-property");
       for (const p of properties) {
-        console.log(p);
-        const propertyKey = {
-          name: p.name,
-          id: p.id
-        }
-        $("<option value='" + JSON.stringify(propertyKey) + "'> " + p.name + "</option>").appendTo("#node-input-property");
+        $("<option value='" + p.id + "'>" + p.name + "</option>").appendTo("#node-input-property");
       }
-      if (property) {
-        $("#node-input-property").val(property);
+      if (property_id) {
+        $("#node-input-property").val(property_id);
       }
     });
   }

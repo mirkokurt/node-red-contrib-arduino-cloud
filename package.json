@@ -14,7 +14,9 @@
   "license": "MIT",
   "node-red": {
     "nodes": {
-      "Property-in": "arduino-cloud.js"
+      "Property-in": "arduino-cloud.js",
+      "Property-out": "arduino-cloud.js",
+      "Property-in-pull": "arduino-cloud.js"
     }
   },
   "dependencies": {
