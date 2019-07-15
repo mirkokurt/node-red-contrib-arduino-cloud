@@ -8,7 +8,7 @@ module.exports = function(RED) {
           const timestamp = (new Date()).getTime();
           node.send(
             {
-              topic: p.name,
+              topic: config.name,
               payload: message,
               timestamp: timestamp
             }            
@@ -49,19 +49,20 @@ module.exports = function(RED) {
     this.timeWindowUnit = config.timeWindowUnit;
 
     if(this.last) {
-      const ArduinoCloudRESTClient = RED.settings.functionGlobalContext.ArduinoRestClient;
+      const ArduinoCloudRESTClient = RED.settings.functionGlobalContext.arduinoConnectionManager.apiRest;
       if (ArduinoCloudRESTClient) {
         node.on('input', function() {
           ArduinoCloudRESTClient.getProperty(config.thing, config.propid).then( (result) => {
             const timestamp = (new Date()).getTime();
             let payload = result.last_value;
-            if (payload === "true") {
+            /*if (payload === "true") {
               payload = true;
             } else if (payload === "false"){
               payload = false;
             } else {
               if(!isNaN(payload)) payload = parseFloat(payload);
             }
+            */
             node.send(
               {
                 topic: config.name,
