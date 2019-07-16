@@ -1,8 +1,10 @@
+const moment = require("moment");
+
 module.exports = function(RED) {
   function ArduinoIotInput(config) {
       RED.nodes.createNode(this, config);
-      var node = this;
-      var promise = RED.settings.functionGlobalContext.arduinoConnectionManager;
+      const node = this;
+      const promise = RED.settings.functionGlobalContext.arduinoConnectionManager;
       promise.then((arduinoConnectionManager) => {
         const ArdarduinCloudMessageClient = arduinoConnectionManager.apiMessage;
         if (ArdarduinCloudMessageClient) {
@@ -29,8 +31,8 @@ module.exports = function(RED) {
 
   function ArduinoIotOutput(config) {
       RED.nodes.createNode(this, config);
-      var node = this;
-      var promise = RED.settings.functionGlobalContext.arduinoConnectionManager;
+      const node = this;
+      const promise = RED.settings.functionGlobalContext.arduinoConnectionManager;
       promise.then((arduinoConnectionManager) => {
         const ArdarduinCloudMessageClient = arduinoConnectionManager.apiMessage;
         if (ArdarduinCloudMessageClient) {
@@ -44,33 +46,23 @@ module.exports = function(RED) {
   }
   RED.nodes.registerType("property out", ArduinoIotOutput);
 
-  var moment = require("moment");
-
   function ArduinoIotInputPull(config) {
     RED.nodes.createNode(this, config);
-    var node = this;
+    const node = this;
 
     this.last = config.last;
     this.timeWindowCount = config.timeWindowCount;
     this.timeWindowUnit = config.timeWindowUnit;
 
-    var promise = RED.settings.functionGlobalContext.arduinoConnectionManager;
+    const promise = RED.settings.functionGlobalContext.arduinoConnectionManager;
     promise.then((arduinoConnectionManager) => {
       if(this.last) {
-        const ArduinoCloudRESTClient = arduinoConnectionManager.apiRest;
-        if (ArduinoCloudRESTClient) {
+        const ArduinoRestClient = arduinoConnectionManager.apiRest;
+        if (ArduinoRestClient) {
           node.on('input', function() {
-            ArduinoCloudRESTClient.getProperty(config.thing, config.propid).then( (result) => {
+            ArduinoRestClient.getProperty(config.thing, config.propid).then( (result) => {
               const timestamp = (new Date()).getTime();
               let payload = result.last_value;
-              /*if (payload === "true") {
-                payload = true;
-              } else if (payload === "false"){
-                payload = false;
-              } else {
-                if(!isNaN(payload)) payload = parseFloat(payload);
-              }
-              */
               node.send(
                 {
                   topic: config.name,
@@ -82,14 +74,14 @@ module.exports = function(RED) {
           });
         }
       } else {
-        const ArduinoCloudRESTClient = arduinoConnectionManager.apiRest;
-        if (ArduinoCloudRESTClient) {
+        const ArduinoRestClient = arduinoConnectionManager.apiRest;
+        if (ArduinoRestClient) {
           node.on('input', function() {
             const now = moment();
             const end = now.format();
             const start = now.subtract(this.timeWindowCount * this.timeWindowUnit, 'second').format();
 
-            ArduinoCloudRESTClient.getSeries(config.thing, config.propid, start, end).then( (result) => {
+            ArduinoRestClient.getSeries(config.thing, config.propid, start, end).then( (result) => {
               const times = result.responses[0].times;
               const values = result.responses[0].values;
               let data = [];
@@ -119,7 +111,7 @@ module.exports = function(RED) {
   RED.nodes.registerType("property in pull", ArduinoIotInputPull);
 
   RED.httpAdmin.get("/things", RED.auth.needsPermission('Property-in.read'), function(req,res) {
-    var promise = RED.settings.functionGlobalContext.arduinoConnectionManager;
+    const promise = RED.settings.functionGlobalContext.arduinoConnectionManager;
     promise.then((arduinoConnectionManager) => {
       const ArduinoRestClient = arduinoConnectionManager.apiRest;
       ArduinoRestClient.getThings()
@@ -132,7 +124,7 @@ module.exports = function(RED) {
   });
 
   RED.httpAdmin.get("/properties", RED.auth.needsPermission('Property-in.read'), function(req,res) {
-    var promise = RED.settings.functionGlobalContext.arduinoConnectionManager;
+    const promise = RED.settings.functionGlobalContext.arduinoConnectionManager;
     promise.then((arduinoConnectionManager) => {
       const thing_id = req.query.thing_id;
       const ArduinoRestClient =  arduinoConnectionManager.apiRest;
