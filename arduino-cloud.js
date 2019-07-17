@@ -7,7 +7,7 @@ module.exports = function(RED) {
       const promise = RED.settings.functionGlobalContext.arduinoConnectionManager;
       promise.then((arduinoConnectionManager) => {
         const ArduinoCloudMessageClient = arduinoConnectionManager.apiMessage;
-        if (ArduinoCloudMessageClient && arduinoConnectionManager.initialized) {
+        if (ArduinoCloudMessageClient && arduinoConnectionManager.isInitialized()) {
           ArduinoCloudMessageClient.onPropertyValue(config.thing, config.name, message => {
             const timestamp = (new Date()).getTime();
             node.send(
