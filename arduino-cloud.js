@@ -6,9 +6,9 @@ module.exports = function(RED) {
       const node = this;
       const promise = RED.settings.functionGlobalContext.arduinoConnectionManager;
       promise.then((arduinoConnectionManager) => {
-        const ArdarduinCloudMessageClient = arduinoConnectionManager.apiMessage;
-        if (ArdarduinCloudMessageClient) {
-          ArdarduinCloudMessageClient.onPropertyValue(config.thing, config.name, message => {
+        const ArduinoCloudMessageClient = arduinoConnectionManager.apiMessage;
+        if (ArduinoCloudMessageClient && arduinoConnectionManager.initialized) {
+          ArduinoCloudMessageClient.onPropertyValue(config.thing, config.name, message => {
             const timestamp = (new Date()).getTime();
             node.send(
               {
@@ -19,10 +19,12 @@ module.exports = function(RED) {
             );
           }).then(() => {
             node.on('close', function(done) {
-              ArdarduinCloudMessageClient.removePropertyValueCallback(config.thing, config.name).then( () => {
+              ArduinoCloudMessageClient.removePropertyValueCallback(config.thing, config.name).then( () => {
                 done();
               });
             });
+          }).catch((err) => {
+            console.log(err);
           });
         }
       });
@@ -34,11 +36,11 @@ module.exports = function(RED) {
       const node = this;
       const promise = RED.settings.functionGlobalContext.arduinoConnectionManager;
       promise.then((arduinoConnectionManager) => {
-        const ArdarduinCloudMessageClient = arduinoConnectionManager.apiMessage;
-        if (ArdarduinCloudMessageClient) {
+        const ArduinoCloudMessageClient = arduinoConnectionManager.apiMessage;
+        if (ArduinoCloudMessageClient) {
           node.on('input', function(msg) {
             const timestamp =   (new Date()).getTime();
-            ArdarduinCloudMessageClient.sendProperty(config.thing, config.name, msg.payload, timestamp).then(() => {
+            ArduinoCloudMessageClient.sendProperty(config.thing, config.name, msg.payload, timestamp).then(() => {
             });
         });
       }
