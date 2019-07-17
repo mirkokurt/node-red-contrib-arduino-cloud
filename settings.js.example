@@ -165,10 +165,10 @@ module.exports = {
               callbackURL: callbackURL,
 			  scope: scope,
 			  state: true,
-			  verify: async function(accessToken, refreshToken, profile, cb) {
+			  verify: async function(accessToken, refreshToken, params, profile, cb) {
                 try {
-                    const connectionManager =  require('connection-manager-arduino-cloud');
-                    await connectionManager.init(accessToken, refreshToken, tokenURL, clientID, clientSecret);
+                    const connectionManager = require('node-red-connection-manager-arduino-cloud');
+                    await connectionManager.init(accessToken, refreshToken, tokenURL, clientID, clientSecret, params.expires_in);
                     const apiRest = connectionManager.apiRest;
                     const user = await apiRest.getUserId();
                     cb(null, user.username);
@@ -274,13 +274,13 @@ module.exports = {
     functionGlobalContext: {
         arduinoConnectionManager: (async () => {
             try {
-                const connectionManager = require('connection-manager-arduino-cloud');
+                const connectionManager = require('node-red-connection-manager-arduino-cloud');
                 const initToken = await connectionManager.load();
-                await connectionManager.init(initToken.accessToken, initToken.refreshToken, initToken.tokenURL, initToken.clientID, initToken.clientSecret);
+                await connectionManager.init(initToken.accessToken, initToken.refreshToken, initToken.tokenURL, initToken.clientID, initToken.clientSecret, initToken.expiresIn);
                 return connectionManager;
             } catch (err) {
                 console.log(err);
-                return require('connection-manager-arduino-cloud');
+                return require('node-red-connection-manager-arduino-cloud');
             }
         })()
         // os:require('os'),
@@ -312,7 +312,7 @@ module.exports = {
     // palette. If a node's category is not in the list, the category will get
     // added to the end of the palette.
     // If not set, the following default order is used:
-    //paletteCategories: ['subflows', 'input', 'output', 'function', 'social', 'mobile', 'storage', 'analysis', 'advanced'],
+    paletteCategories: ['subflows', 'Arduino' , 'input', 'output', 'function', 'social', 'mobile', 'storage', 'analysis', 'advanced'],
 
     // Configure the logging output
     logging: {
