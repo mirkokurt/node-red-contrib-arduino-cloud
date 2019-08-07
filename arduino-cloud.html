@@ -213,7 +213,7 @@
     $.getJSON(`properties?thing_id=${thing_id}` , properties => {
       $("<option value='" + 0 + "'> " + "Select a property" + "</option>").appendTo("#node-input-property");
       for (const p of properties) {
-        $("<option value='" + p.id + "'>" + p.name + "</option>").appendTo("#node-input-property");
+        $("<option value='" + p.id + "'>" + p.variable_name + "</option>").appendTo("#node-input-property");
       }
       if (property_id) {
         $("#node-input-property").val(property_id);
