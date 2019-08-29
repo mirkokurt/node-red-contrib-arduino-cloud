@@ -3,6 +3,7 @@
       category: 'Arduino',
       color: '#00979d',
       defaults: {
+          connection: {type: "arduino-connection", required: true},
           thing: {value:""},  
           property: {value:""},
           name: {value:""},
@@ -48,8 +49,11 @@
       }
   });
 </script>
-
 <script type="text/x-red" data-template-name="property in">
+  <div class="form-row node-input-connection">
+    <label for="node-input-connection"><i class="fa fa-random"></i> Connection</label>
+    <input type="text" id="node-input-connection">
+  </div>
   <div class="form-row">
     <label for="node-input-thing"><i class="icon-tag"></i> Thing</label>
     <select id="node-input-thing">
@@ -65,7 +69,6 @@
     <input type="text" id="node-input-name" placeholder="Name">
   </div>
 </script>
-
 <script type="text/x-red" data-help-name="property in">
   <p>This node injects in the flow the changed value of a specific Arduino IoT Cloud property.</p>
 </script>
@@ -75,6 +78,7 @@
       category: 'Arduino',
       color: '#00979d',
       defaults: {
+          connection: {type: "arduino-connection", required: true},
           thing: {value:""},  
           property: {value:""},
           name: {value:""},
@@ -121,8 +125,11 @@
   });
 
 </script>
-
 <script type="text/x-red" data-template-name="property out">
+  <div class="form-row node-input-connection">
+    <label for="node-input-connection"><i class="fa fa-random"></i> Connection</label>
+    <input type="text" id="node-input-connection">
+  </div>
   <div class="form-row">
       <label for="node-input-thing"><i class="icon-tag"></i> Thing</label>
       <select id="node-input-thing">
@@ -138,7 +145,6 @@
       <input type="text" id="node-input-name" placeholder="Name">
   </div>
 </script>
-
 <script type="text/x-red" data-help-name="property out">
   <p>This node update a specific Arduino IoT Cloud property with the value received in input</p>
 </script>
@@ -148,6 +154,7 @@
       category: 'Arduino',
       color: '#00979d',
       defaults: {
+          connection: {type: "arduino-connection", required: true},
           thing: {value:""},  
           property: {value:""},
           propid: {value:""},
@@ -223,6 +230,10 @@
 </script>
 
 <script type="text/x-red" data-template-name="property in pull">
+  <div class="form-row node-input-connection">
+    <label for="node-input-connection"><i class="fa fa-random"></i> Connection</label>
+    <input type="text" id="node-input-connection">
+  </div>
   <div class="form-row">
     <label for="node-input-thing"><i class="icon-tag"></i> Thing</label>
     <select id="node-input-thing">
@@ -262,3 +273,44 @@
 <script type="text/x-red" data-help-name="property in pull">
   <p>This node injects in the flow the last value of an Arduino Cloud Property or a range of values based on the node configuration.</p>
 </script>
+
+<script type="text/javascript">
+  RED.nodes.registerType('arduino-connection',{
+      category: 'config',
+      defaults: {
+          applicationname: {value:"",required:true},
+          clientid: {value:"",required:true},
+          clientsecret: {value:"",required:true}
+      },
+      label: function() {
+          return this.applicationname || "";
+      },
+      oneditprepare: function() {
+
+      },
+      oneditsave: function() {
+        console.log("Application Name: " + this.applicationname);
+        console.log("Client ID: " + this.clientid);
+        console.log("Client Secret: " + this.clientsecret);
+        debugger;
+      }
+  });
+</script>
+<script type="text/x-red" data-template-name="arduino-connection">
+  <div class="form-row">
+    <label for="node-config-input-applicationname"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-config-input-applicationname" placeholder="Application name">
+  </div>
+  <div class="form-row">
+    <label for="node-config-input-clientid"><i class="icon-tag"></i> Client ID</label>
+    <input type="text" id="node-config-input-clientid" placeholder="Client ID">
+  </div>
+  <div class="form-row">
+    <label for="node-config-input-clientsecret"><i class="icon-tag"></i> Client secret</label>
+    <input type="text" id="node-config-input-clientsecret" placeholder="Client secret">
+  </div>
+</script>
+<script type="text/x-red" data-help-name="arduino-connection">
+  <p>Provides configuration options for an Arduino IoT Cloud session.</p>
+</script>
+

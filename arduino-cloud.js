@@ -3,6 +3,8 @@ const moment = require("moment");
 module.exports = function(RED) {
   function ArduinoIotInput(config) {
       RED.nodes.createNode(this, config);
+      this.connection = config.connection;
+      this.connectionConfig = RED.nodes.getNode(this.connection);
       const node = this;
       const promise = RED.settings.functionGlobalContext.arduinoConnectionManager;
       promise.then((arduinoConnectionManager) => {
@@ -33,6 +35,8 @@ module.exports = function(RED) {
 
   function ArduinoIotOutput(config) {
       RED.nodes.createNode(this, config);
+      this.connection = config.connection;
+      this.connectionConfig = RED.nodes.getNode(this.connection);
       const node = this;
       const promise = RED.settings.functionGlobalContext.arduinoConnectionManager;
       promise.then((arduinoConnectionManager) => {
@@ -50,8 +54,9 @@ module.exports = function(RED) {
 
   function ArduinoIotInputPull(config) {
     RED.nodes.createNode(this, config);
+    this.connection = config.connection;
+    this.connectionConfig = RED.nodes.getNode(this.connection);
     const node = this;
-
     this.last = config.last;
     this.timeWindowCount = config.timeWindowCount;
     this.timeWindowUnit = config.timeWindowUnit;
@@ -111,6 +116,14 @@ module.exports = function(RED) {
     });  
   }
   RED.nodes.registerType("property in pull", ArduinoIotInputPull);
+  
+  function ArduinoConnectionNode(config) {
+    RED.nodes.createNode(this,config);
+    this.applicationname = config.applicationname;
+    this.clientid = config.clientid;
+    this.clientsecret = config.clientsecret;
+  }
+  RED.nodes.registerType("arduino-connection",ArduinoConnectionNode);
 
   RED.httpAdmin.get("/things", RED.auth.needsPermission('Property-in.read'), function(req,res) {
     const promise = RED.settings.functionGlobalContext.arduinoConnectionManager;
